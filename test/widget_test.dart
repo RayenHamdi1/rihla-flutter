@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 
 import 'package:rihla/main.dart';
+import 'package:rihla/providers/favoris_model.dart';
+
+Widget _app() {
+  return ChangeNotifierProvider(
+    create: (_) => FavorisModel(),
+    child: const RihlaApp(),
+  );
+}
 
 void main() {
   testWidgets('Home screen displays the featured destination', (
@@ -9,7 +18,7 @@ void main() {
   ) async {
     await tester.binding.setSurfaceSize(const Size(800, 1600));
     addTearDown(() => tester.binding.setSurfaceSize(null));
-    await tester.pumpWidget(const RihlaApp());
+    await tester.pumpWidget(_app());
 
     expect(find.text('Ahlan, Rayen 👋'), findsOneWidget);
     expect(find.text('Sidi Bou Saïd'), findsNWidgets(2));
@@ -22,7 +31,7 @@ void main() {
   ) async {
     await tester.binding.setSurfaceSize(const Size(800, 1600));
     addTearDown(() => tester.binding.setSurfaceSize(null));
-    await tester.pumpWidget(const RihlaApp());
+    await tester.pumpWidget(_app());
 
     expect(find.byIcon(Icons.favorite_border), findsAtLeastNWidgets(3));
 
@@ -51,14 +60,14 @@ void main() {
   ) async {
     await tester.binding.setSurfaceSize(const Size(800, 1600));
     addTearDown(() => tester.binding.setSurfaceSize(null));
-    await tester.pumpWidget(const RihlaApp());
+    await tester.pumpWidget(_app());
 
     await tester.tap(find.text('Désert'));
     await tester.pump();
     await tester.tap(find.text('Favoris'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Bientôt disponible'), findsOneWidget);
+    expect(find.text('Aucun favori pour le moment'), findsOneWidget);
     expect(find.byIcon(Icons.favorite), findsOneWidget);
     expect(find.byIcon(Icons.explore_outlined), findsOneWidget);
 
