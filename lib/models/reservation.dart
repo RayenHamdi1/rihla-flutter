@@ -1,6 +1,7 @@
 import 'destination.dart';
 
 class Reservation {
+  final String? id; // NEW: null until the server has saved the reservation
   final Destination destination;
   final String nom;
   final String email;
@@ -10,6 +11,7 @@ class Reservation {
   final String formule;
 
   const Reservation({
+    this.id, // NEW: optional, no "required"
     required this.destination,
     required this.nom,
     required this.email,
@@ -24,4 +26,17 @@ class Reservation {
       : destination.prix;
 
   int get total => prixParPersonne * voyageurs;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'destinationId': destination.id, // the id is enough
+      'nom': nom,
+      'email': email,
+      'telephone': telephone,
+      'voyageurs': voyageurs,
+      'formule': formule,
+      'total': total,
+      'dateDepart': dateDepart.toIso8601String(),
+    };
+  }
 }
