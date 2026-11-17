@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
           NavigationDestination(
             icon: Icon(Icons.explore_outlined),
             selectedIcon: Icon(Icons.explore),
-            label: 'Explorer',
+            label: 'Réservations',
           ),
           NavigationDestination(
             icon: Icon(Icons.favorite_border),
