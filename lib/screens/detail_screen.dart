@@ -4,6 +4,7 @@ import '../models/destination.dart';
 import '../models/reservation.dart';
 import '../widgets/favorite_button.dart';
 import 'reservation_screen.dart';
+import '../services/api_service.dart';
 
 class DetailScreen extends StatefulWidget {
   final Destination destination;
@@ -29,6 +30,20 @@ class _DetailScreenState extends State<DetailScreen> {
     );
 
     if (!mounted || reservation == null) return;
+    final String id;
+    try {
+      id = await ApiService.creerReservation(reservation);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Envoi impossible : json-server est-il lancé ?'),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+      return; // no confirmation if nothing was saved
+    }
+    if (!mounted) return;
 
     await showDialog<void>(
       context: context,
@@ -36,6 +51,7 @@ class _DetailScreenState extends State<DetailScreen> {
         icon: const Icon(Icons.check_circle, color: Colors.green, size: 48),
         title: const Text('Réservation confirmée'),
         content: Text(
+          'N° de réservation : $id\n\n'
           '${reservation.nom}, votre séjour à ${reservation.destination.nom} '
           'est réservé pour ${reservation.voyageurs} voyageur(s), '
           'formule ${reservation.formule}.\n\n'
@@ -82,10 +98,10 @@ class _DetailScreenState extends State<DetailScreen> {
                     ),
                   ),
                 ),
-                const Positioned(
+                Positioned(
                   top: 48,
                   right: 16,
-                  child: _BoutonRond(child: FavoriteButton()),
+                  child: _BoutonRond(child: FavoriteButton(destination: d)),
                 ),
               ],
             ),
@@ -159,7 +175,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       child: _InfoTile(
                         icone: Icons.schedule,
                         label: 'Durée',
-                        valeur: '${d.duree}',
+                        valeur: d.duree,
                       ),
                     ),
                     const SizedBox(width: 12),
