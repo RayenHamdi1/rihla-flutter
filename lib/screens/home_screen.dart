@@ -9,6 +9,7 @@ import '../widgets/search_box.dart';
 import '../widgets/hero_banner.dart';
 import '../widgets/section_title.dart';
 import '../models/destination.dart';
+import '../providers/reglages_model.dart';
 import '../services/api_service.dart';
 
 import 'dart:ui' show PointerDeviceKind;
@@ -78,8 +79,27 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final nombreFavoris = context.watch<FavorisModel>().nombre;
+    final reglages = context.watch<ReglagesModel>();
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(switch (_onglet) {
+          0 => 'Explorer',
+          1 => 'Favoris',
+          _ => 'Profil',
+        }),
+        actions: [
+          IconButton(
+            tooltip: reglages.sombre
+                ? 'Activer le thème clair'
+                : 'Activer le thème sombre',
+            onPressed: () {
+              context.read<ReglagesModel>().basculerTheme();
+            },
+            icon: Icon(reglages.sombre ? Icons.light_mode : Icons.dark_mode),
+          ),
+        ],
+      ),
       body: _onglet == 0
           ? _construireExplorer()
           : _onglet == 1
