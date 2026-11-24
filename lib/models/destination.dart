@@ -37,4 +37,17 @@ class Destination {
       groupeMax: (json['groupeMax'] as int?) ?? 10,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'nom': nom,
+    'region': region,
+    'image': image,
+    'note': note,
+    'prix': prix,
+    'categorie': categorie,
+    'description': description,
+    'duree': duree,
+    'groupeMax': groupeMax,
+  };
 }

@@ -9,6 +9,7 @@ import '../widgets/search_box.dart';
 import '../widgets/hero_banner.dart';
 import '../widgets/section_title.dart';
 import '../models/destination.dart';
+import '../providers/reglages_model.dart';
 import '../services/api_service.dart';
 
 import 'dart:ui' show PointerDeviceKind;
@@ -68,7 +69,42 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           child: RefreshIndicator(
             onRefresh: _recharger,
-            child: _construireAccueil(destinations),
+            child: Column(
+              children: [
+                if (ApiService.depuisCache)
+                  Container(
+                    width: double.infinity,
+                    color: Theme.of(context).colorScheme.secondaryContainer,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 10,
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.wifi_off,
+                          size: 20,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'Hors connexion : données enregistrées',
+                            style: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSecondaryContainer,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                Expanded(child: _construireAccueil(destinations)),
+              ],
+            ),
           ),
         );
       },
@@ -78,8 +114,27 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final nombreFavoris = context.watch<FavorisModel>().nombre;
+    final reglages = context.watch<ReglagesModel>();
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(switch (_onglet) {
+          0 => 'Explorer',
+          1 => 'Favoris',
+          _ => 'Profil',
+        }),
+        actions: [
+          IconButton(
+            tooltip: reglages.sombre
+                ? 'Activer le thème clair'
+                : 'Activer le thème sombre',
+            onPressed: () {
+              context.read<ReglagesModel>().basculerTheme();
+            },
+            icon: Icon(reglages.sombre ? Icons.light_mode : Icons.dark_mode),
+          ),
+        ],
+      ),
       body: _onglet == 0
           ? _construireExplorer()
           : _onglet == 1
@@ -96,11 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const NavigationDestination(
             icon: Icon(Icons.explore_outlined),
             selectedIcon: Icon(Icons.explore),
-<<<<<<< HEAD
-            label: 'Réservations',
-=======
-            label: 'Mes voyages',
->>>>>>> feature/onglet
+            label: 'Explorer',
           ),
           NavigationDestination(
             icon: Badge(
