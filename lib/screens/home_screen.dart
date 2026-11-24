@@ -69,7 +69,42 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           child: RefreshIndicator(
             onRefresh: _recharger,
-            child: _construireAccueil(destinations),
+            child: Column(
+              children: [
+                if (ApiService.depuisCache)
+                  Container(
+                    width: double.infinity,
+                    color: Theme.of(context).colorScheme.secondaryContainer,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 10,
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.wifi_off,
+                          size: 20,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'Hors connexion : données enregistrées',
+                            style: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSecondaryContainer,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                Expanded(child: _construireAccueil(destinations)),
+              ],
+            ),
           ),
         );
       },
