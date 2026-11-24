@@ -96,11 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const NavigationDestination(
             icon: Icon(Icons.explore_outlined),
             selectedIcon: Icon(Icons.explore),
-<<<<<<< HEAD
-            label: 'Réservations',
-=======
-            label: 'Mes voyages',
->>>>>>> feature/onglet
+            label: 'Explorer',
           ),
           NavigationDestination(
             icon: Badge(
